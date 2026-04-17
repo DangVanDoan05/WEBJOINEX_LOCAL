@@ -1,0 +1,166 @@
+/* #region   KHỐI SLIDER SẢN PHẨM LIÊN QUAN */
+
+/* KHỐI SLIDER BAO NGOÀI CÙNG */
+
+.product-list-slider-container {
+  display: flex;
+  width: 1245px; /* Thử từng giá trị thôi chứ tính lại càng mệt */
+  height: 460;
+  gap: 10px;
+  justify-content: center; /* căn ngang */
+  align-items: center; /* căn dọc */
+}
+
+.product-list-slider {
+  position: relative; /* để khối overlay định vị theo container */
+  overflow: hidden;
+  height: 450px;
+  padding: 15px 0px 20px 0px; /* trên phải dưới trái */
+}
+
+.product-list-slider-joinex-track {
+  display: flex;
+  height: 450px;
+  gap: 0px;
+  transition: transform 0.5s ease;
+  position: relative;
+  z-index: 1; /* các item nằm dưới */
+}
+
+.overlay-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999; /* nằm trên cùng */
+  background: rgba(255, 255, 255, 0); /* trong suốt */
+  pointer-events: none; /* không chặn thao tác chuột */
+}
+
+/* từng phần tử đây */
+.product-slider-item {
+  flex: 0 0 auto; /* giữ kích thước cố định */
+  width: 270.75px;
+  height: 418px;
+  margin: 0px 8px 0px 8px; /* trên phải dưới trái */
+  transition: transform 0.5s ease-in-out; /* hiệu ứng khi hover */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 20px 20px 20px 20px;
+}
+
+.product-slider-item:hover {
+  transform: scale(1.03); /* phóng to nhẹ khi hover */
+}
+
+.product-slider-item-image-container {
+  display: flex;
+  width: 270.75px;
+  height: 270.75px;
+  background-color: #e3e3e4; /* Xét nền cho hình ảnh */
+  border-radius: 20px 20px 0px 0px;
+  justify-content: center; /* căn ngang */
+  align-items: center; /* căn dọc */
+  padding: 12px;
+}
+
+.product-slider-item-image {
+  position: relative; /* khung tham chiếu cho nhãn */
+}
+
+.product-slider-item-image img {
+  border-radius: 20px 20px 0px 0px;
+  max-width: 100%;
+  height: auto;
+}
+
+.discount-label {
+  position: absolute; /* nhãn nằm đè lên ảnh */
+  top: 0px; /* cách mép trên 0px */
+  left: 0px; /* cách mép phải 0px */
+  background-color: #db4444;
+  font-family: "Be Vietnam", sans-serif;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* #region CSS KHỐI TIÊU ĐỀ SẢN PHẨM */
+
+.product-price-add-to-cart {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.product-slider-item-title {
+  padding: 15px;
+  height: 147px;
+}
+
+.product-slider-item-joinex-title {
+  width: 100%; /* tràn hết khung cha */
+  height: 50px;
+}
+
+.product-price-add-to-cart-slider-joinex {
+  display: flex;
+  justify-content: space-between; /* phần tử đầu nằm bên trái, phần tử cuối nằm bên phải */
+  align-items: center; /* căn giữa theo chiều dọc (nếu muốn) */
+  padding-top: 10px;
+}
+.product-slider-item-joinex-title h3 {
+  font-family: "Be Vietnam Pro", sans-serif;
+  color: #000000;
+  font-size: 16px;
+  font-weight: 550;
+  line-height: 25px;
+}
+
+.product-joinex-divider {
+  height: 1px;
+  background-color: #cbcbcb;
+  width: 240px; /* tràn hết khung cha */
+}
+
+.add-to-cart-joinex {
+  height: 22px;
+  width: 22px;
+}
+/*#endregion*/
+
+/* Nút next prev */
+#prev-joinex-slider,
+#next-joinex-slider {
+  display: flex;
+  justify-content: center; /* căn ngang */
+  align-items: center; /* căn dọc */
+  font-family: "Be Vietnam Pro", sans-serif; /* phông chữ */
+  font-size: 28px; /* cỡ chữ */
+  font-weight: 500; /* độ đậm */
+  color: #000000; /* màu chữ */
+  background-color: #ffffff;
+  width: 30px; /* chiều rộng */
+  height: 30px; /* chiều cao */
+  border: none; /* bỏ viền mặc định */
+  border-radius: 20%; /* bo tròn */
+
+  cursor: pointer; /* đổi con trỏ khi hover */
+  transition: background-color 0.3s ease;
+}
+
+#prev-joinex-slider:hover {
+  background-color: #f5f5f5; /* đổi màu khi hover */
+}
+#next-joinex-slider:hover {
+  background-color: #f5f5f5; /* đổi màu khi hover */
+}
+
+/* #endregion */
+.joinex_No_Price_Product{
+  font-family: "BeVietnam Pro", sans-serif; /* đổi font */
+  font-size: 16px; /* cỡ chữ */
+  font-weight: 400; /* độ đậm */
+  color: #000000; /* màu chữ (ví dụ đỏ) */
+}
