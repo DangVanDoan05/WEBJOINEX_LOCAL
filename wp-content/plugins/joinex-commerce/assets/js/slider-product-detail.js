@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (isSliding) return;
     isSliding = true;
 
-    const firstItem = track.querySelector(".product-slider-item");
+    const firstItem = track.querySelector(".product-slider-joinex-item");
     const itemWidth = firstItem.offsetWidth + 20;
 
     track.appendChild(firstItem.cloneNode(true));

@@ -4,9 +4,9 @@
 
 .product-list-slider-container {
   display: flex;
-  width: 1245px; /* Thử từng giá trị thôi chứ tính lại càng mệt */
-  height: 460;
-  gap: 10px;
+  width: 100%;
+  max-width: 1230px; /* giới hạn tối đa */
+  margin: 0 auto;    /* căn giữa container */
   justify-content: center; /* căn ngang */
   align-items: center; /* căn dọc */
 }
@@ -39,7 +39,7 @@
 }
 
 /* từng phần tử đây */
-.product-slider-item {
+.product-slider-joinex-item {
   flex: 0 0 auto; /* giữ kích thước cố định */
   width: 270.75px;
   height: 418px;
@@ -49,11 +49,12 @@
   border-radius: 20px 20px 20px 20px;
 }
 
-.product-slider-item:hover {
+.product-slider-joinex-item:hover {
   transform: scale(1.03); /* phóng to nhẹ khi hover */
 }
 
-.product-slider-item-image-container {
+/*#region KHỐI HÌNH ẢNH */
+.product-slider-joinex-item-image-container {
   display: flex;
   width: 270.75px;
   height: 270.75px;
@@ -64,11 +65,11 @@
   padding: 12px;
 }
 
-.product-slider-item-image {
+.product-slider-joinex-item-image {
   position: relative; /* khung tham chiếu cho nhãn */
 }
 
-.product-slider-item-image img {
+.product-slider-joinex-item-image img {
   border-radius: 20px 20px 0px 0px;
   max-width: 100%;
   height: auto;
@@ -87,21 +88,22 @@
   border-radius: 4px;
 }
 
+/*#endregion*/
+
 /* #region CSS KHỐI TIÊU ĐỀ SẢN PHẨM */
+
+.product-slider-joinex-item-title-container{
+     padding: 12px;
+      height: 147.25px;
+}
 
 .product-price-add-to-cart {
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
-.product-slider-item-title {
-  padding: 15px;
-  height: 147px;
-}
-
-.product-slider-item-joinex-title {
-  width: 100%; /* tràn hết khung cha */
-  height: 50px;
+.product-slider-joinex-item-title {
+  height: 65px;
 }
 
 .product-price-add-to-cart-slider-joinex {
@@ -110,7 +112,7 @@
   align-items: center; /* căn giữa theo chiều dọc (nếu muốn) */
   padding-top: 10px;
 }
-.product-slider-item-joinex-title h3 {
+.product-slider-joinex-item-title h3 {
   font-family: "Be Vietnam Pro", sans-serif;
   color: #000000;
   font-size: 16px;
@@ -121,7 +123,7 @@
 .product-joinex-divider {
   height: 1px;
   background-color: #cbcbcb;
-  width: 240px; /* tràn hết khung cha */
+  width: 100%; /* tràn hết khung cha */
 }
 
 .add-to-cart-joinex {
@@ -130,7 +132,8 @@
 }
 /*#endregion*/
 
-/* Nút next prev */
+/*#region Nút TUA TRÁI PHẢI CỦA SLIDER */
+
 #prev-joinex-slider,
 #next-joinex-slider {
   display: flex;

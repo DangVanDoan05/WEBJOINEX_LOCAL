@@ -19,7 +19,7 @@ function slider_joinex_product_detail_shortcode() {
                 $order_by = isset($_GET['orderby']) ? sanitize_text_field($_GET['orderby']) : ''; // Tham số để sắp xếp.
                 $args = array(
                     'post_type'      => 'product',
-                    'posts_per_page' => 6, // Quy ước của WORDPRESS Nếu bạn đặt -1, WordPress hiểu là “không giới hạn”, tức là lấy ra tất cả các bài viết/sản phẩm phù hợp với query.
+                    'posts_per_page' => -1, // Quy ước của WORDPRESS Nếu bạn đặt -1, WordPress hiểu là “không giới hạn”, tức là lấy ra tất cả các bài viết/sản phẩm phù hợp với query.
                       //tức là lấy ra tất cả các bài viết/sản phẩm phù hợp với query.
                     'post_status'    => 'publish',
                     'orderby'        => 'ID',
@@ -95,12 +95,12 @@ function slider_joinex_product_detail_shortcode() {
                                         $discount_percent = round( ( ( $regular_price - $sale_price ) / $regular_price ) * 100 );
                                     }
                                     ?>
-                                    // 🔥 BẮT ĐẦU SHOW SẢN PHẨM
-                                    <div class="product-slider-item">
+                                    <!-- PHẦN BẮT ĐẦU SHOW SẢN PHẨM -->
+                                    <div class="product-slider-joinex-item">
                                         <a <?php echo joinex_get_product_detail_page_attrs( $product->get_id() ); ?>>
                                             <!--KHỐI HÌNH ẢNH SẢN PHẨM-->
-                                            <div class="product-slider-item-image-container">                                                
-                                                <div class="product-slider-item-image">
+                                            <div class="product-slider-joinex-item-image-container">                                                
+                                                <div class="product-slider-joinex-item-image">
                                                     <?php
                                                         echo $product->get_image();
                                 
@@ -112,9 +112,9 @@ function slider_joinex_product_detail_shortcode() {
                                             </div> 
 
                                             <!--KHỐI TIÊU ĐỀ SẢN PHẨM-->                                                                                 
-                                            <div class="product-slider-item-title">
+                                            <div class="product-slider-joinex-item-title-container">
 
-                                                    <div class="product-slider-item-joinex-title">
+                                                    <div class="product-slider-joinex-item-title">
                                                         <h3><?php echo esc_html( get_the_title() ); ?></h3>
                                                     </div>  
 
@@ -178,17 +178,4 @@ function slider_joinex_product_detail_shortcode() {
 
 add_shortcode('slider_joinex_product_detail', 'slider_joinex_product_detail_shortcode');
 
- // Enqueue JS riêng cho shortcode
- function joinex_enqueue_slider_scripts() {
-    // Đảm bảo chỉ load khi shortcode được dùng
-    if ( is_page() || is_single() ) {
-        wp_enqueue_script(
-            'joinex-slider', // handle
-           plugin_dir_url(__FILE__) . '../assets/js/slider-product-detail.js', // đường dẫn tới file JS
-            array('jquery'), // dependencies
-            '1.0.0', // version
-            true // in_footer
-        );
-    }
-}
-add_action('wp_enqueue_scripts', 'joinex_enqueue_slider_scripts');
+ 

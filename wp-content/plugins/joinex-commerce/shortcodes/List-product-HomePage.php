@@ -35,8 +35,7 @@ $loop = new WP_Query($args);
 
     // KHỐI LẤY SẢN PHẨM ĐÃ BỎ LỖI LẤY SẢN PHẨM ĐƠN GIẢN
 
-    if ( $loop->have_posts() ) {
-    
+    if ( $loop->have_posts() ) {  
         echo '<div class="product-list-joinex">';
              // VÒNG LẶP ĐỂ LẤY SẢN PHẨM
             while ( $loop->have_posts() ) {
@@ -103,13 +102,12 @@ $loop = new WP_Query($args);
                 ?>
                 <!-- KHỐI SHOW SẢN PHẨM -->
                 <div class="product-item-joinex">                  
-                    <a class="product-joinex-img-card-a" <?php echo joinex_get_product_detail_page_attrs( $product->get_id() ); ?>>
+                    <a class="product-joinex-img-card-a" <?php echo joinex_get_product_detail_page_attrs($product->get_id()); ?>>
                         <!--$product ở đây là một đối tượng kiểu WC_Product (được tạo ra khi bạn gọi wc_get_product( get_the_ID() )) -->
                         <!-- KHỐI HÌNH ẢNH -->
                         <div class="product-item-joinex-image">
                             <?php
                                 echo $product->get_image();
-        
                                 if ( $discount_percent ) {
                                     //-- ĐÂY RỒI DISCOUNT LAYBAL Ở ĐÂY NÀY
                                     echo '<p id="discount-label-homepageJoinex">- ' . $discount_percent . '%</p>';

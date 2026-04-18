@@ -218,117 +218,30 @@ function joinex_product_detail_shortcode() {
                     <li class="tab-link-joinex" data-tab="specs">Thông số kỹ thuật</li>
                     <li class="tab-link-joinex" data-tab="guide">Hướng dẫn lắp đặt</li>
                 </ul>
+
                 <div class="tab-content-joinex"> <!-- TAB ĐẦU TIÊN --> 
-                    <div id="desc" class="tab-pane-joinex active">
-                    <?php echo wpautop($product->get_description()); ?>
+                     <p>ĐÂY LÀ PHẦN MÔ TẢ DÀI SẢN PHẨM </p>
                 </div>
+
                 <div id="specs" class="tab-pane-joinex"> <!-- TAB GIỮA --> 
-                   <?php
-                        $product_id = isset($_GET['product_id']) ? intval($_GET['product_id']) : get_the_ID();
-                        // Lấy dữ liệu meta
-                        $thong_so = get_post_meta($product_id, '_thong_so_ky_thuat', true);
-                        $huong_dan = get_post_meta($product_id, '_huong_dan_lap_dat', true);
-                        // Hiển thị nếu có dữ liệu
-                        if (!empty($thong_so)) {
-                            echo '<div class="product-thong-so">';
-                            echo '<h3>Thông số kỹ thuật</h3>';
-                            echo wpautop($thong_so);
-                            echo '</div>';
-                        }
-                    ?>
+                     <p>ĐÂY LÀ PHẦN THÔNG SỐ KỸ THUẬT SẢN PHẨM </p>
                 </div>
 
                 <div id="guide" class="tab-pane-joinex"> <!-- TAB CUỐI --> 
                     <p>Hướng dẫn chi tiết cách lắp đặt sản phẩm tại nhà...</p>
-                    <?php
-                        $product_id = isset($_GET['product_id']) ? intval($_GET['product_id']) : get_the_ID();
-                        // Lấy dữ liệu meta
-                      
-                        $huong_dan = get_post_meta($product_id, '_huong_dan_lap_dat', true);
-                        if (!empty($huong_dan)) {
-                            echo '<div class="product-huong-dan">';
-                            echo '<h3>Hướng dẫn lắp đặt</h3>';
-                            echo wpautop($huong_dan);
-                            echo '</div>';
-                        }
-                    ?>
-
+                   
                 </div>
             </div>
         </div>
         </div> 
         <!-- KHỐI REVIEW SẢN PHẨM  --> 
         <div id="reviews" class="customer-review-product">  <!-- KHỐI REVIEW SẢN PHẨM  --> 
-            <div><p>ĐÂY LÀ KHỐI KẾT QUẢ ĐÁNH GIÁ SẢN PHẨM</p></div>
-            <?php
-                global $post;
-                $product_id = $post->ID; // hoặc $_GET['product_id'] nếu bạn dùng URL query
-
-                // Lấy danh sách review cho sản phẩm
-                $args = array(
-                    'post_id' => $product_id,
-                    'status'  => 'approve',
-                    'type'    => 'review',
-                );
-                $reviews = get_comments($args);
-
-                // Lấy rating trung bình
-               // $average_rating = wc_get_rating_html( wc_get_average_rating($product_id) );
-
-                echo '<h3>Đánh giá từ khách hàng</h3>';
-              //  echo '<div class="average-rating">' . $average_rating . '</div>';
-
-                if ($reviews) {
-                    echo '<div class="product-reviews">';
-                    foreach ($reviews as $review) {
-                        $rating = get_comment_meta($review->comment_ID, 'rating', true);
-                        echo '<div class="single-review">';
-                        echo '<strong>' . esc_html($review->comment_author) . '</strong>';
-                        if ($rating) {
-                            echo wc_get_rating_html($rating);
-                        }
-                        echo '<p>' . esc_html($review->comment_content) . '</p>';
-                        echo '</div>';
-                    }
-                    echo '</div>';
-                } else {
-                    echo '<p>Chưa có đánh giá nào cho sản phẩm này.</p>';
-                }
-            ?>
-        </div>
-       
-
+            <div><p>ĐÂY LÀ KHỐI KẾT QUẢ ĐÁNH GIÁ SẢN PHẨM</p></div>          
+        </div>      
     </div>
     <?php
     return ob_get_clean();
 }
-
 add_shortcode('joinex_product_detail', 'joinex_product_detail_shortcode');
 
-
-    // Enqueue JS riêng cho shortcode
-    function joinex_enqueue_product_detail_scripts() {
-        // Đảm bảo chỉ load khi shortcode xuất hiện
-        if ( is_singular('product') ) {
-            wp_enqueue_script(
-                'joinex-product-detail', // handle
-                plugin_dir_url(__FILE__) . '../assets/js/product-detail.js', // đường dẫn tới file JS
-                array('jquery'), // dependencies
-                '1.0.0', // version
-                true // in footer
-            );
-        }
-    }
-    add_action( 'wp_enqueue_scripts', 'joinex_enqueue_product_detail_scripts' );
-
-    function enqueue_gallery_slider_js() {
-        wp_enqueue_script(
-            'gallery-slider',
-            plugin_dir_url(__FILE__) . '../assets/js/product-detail.js',
-            array('jquery'),
-            '1.0.0',
-            true
-        );
-    }
-    add_action('wp_enqueue_scripts', 'enqueue_gallery_slider_js');
     

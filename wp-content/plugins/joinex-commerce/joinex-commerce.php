@@ -3,12 +3,12 @@
 Plugin Name: Joinex Commerce
 Description: Custom Checkout for Joinex
 Version: 1.0
-Author: M1029_Dang Van Doan
+Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold 
 */
 
-//#region THỨ TỰ CÁC FILE CỦA PLUGIN
+//#region HƯỚNG DẪN THỨ TỰ CÁC FILE CỦA PLUGIN
 
-    //Thứ tự hợp lý là: Khai báo hằng số → Load assets → Đăng ký shortcode → Require các file logic.
+    //Thứ tự hợp lý là: Khai báo hằng số → Load assets → Đăng ký shortcode → Require các file logic (includes).
     // CSS/JS cần được enqueue sớm để khi WordPress render frontend, chúng đã sẵn sàng.
 
 //#endregion
@@ -31,6 +31,11 @@ Author: M1029_Dang Van Doan
     }
 //#endregion
 
+
+//#region LOAD CÁC TIỆN ÍCH (require trực tiếp, không cần hook)
+    require_once plugin_dir_path(__FILE__). 'includes/product-utils.php';
+//#endregion
+
 //#region   HÀM TẠO RA ICON ĐỂ BIẾT ICON KÍCH HOẠT.
     add_action('admin_menu', 'joinex_admin_menu');
 
@@ -49,9 +54,9 @@ Author: M1029_Dang Van Doan
 
 // #endregion 
 
-/* LOAD CSS-JS */
-    // wp_enqueue_style là một hàm (function) của WordPress, không phải hook.
-    // Nó được dùng để đăng ký và đưa CSS vào hàng chờ (enqueue) để WordPress load ra ngoài.
+/* #region LOAD ASSETS CSS-JS */
+    // wp_enqueue_style là một hàm (function) của WordPress
+    // wp_enqueue_style là một hàm (function) của WordPress, Nó được dùng để đăng ký và đưa CSS vào hàng chờ (enqueue) để WordPress load ra ngoài.
     // Cú pháp cơ bản:  wp_enqueue_style( $handle, $src, $deps, $ver, $media );
     
        // $handle: tên định danh duy nhất cho stylesheet.
@@ -63,94 +68,92 @@ Author: M1029_Dang Van Doan
        // $ver: version (thường để tránh cache).
 
       // $media: loại media (screen, print…).
+      
+     // Hàm “ĐẢM BẢO” để enqueue,tự kiểm tra file trước khi gọi filemtime():
 
-    function joinex_load_assets(){
-       
-        wp_enqueue_style(
-            'joinex-checkout-css', // tên định danh duy nhất cho stylesheet.
-            plugin_dir_url(__FILE__) . 'assets/css/checkout.css', // $src: đường dẫn URL đến file CSS.
-            array(),  // $deps: mảng các stylesheet phụ thuộc (nếu có). ; array() trống = không phụ thuộc, chỉ để giữ đúng cú pháp.
-            filemtime( plugin_dir_path(__FILE__) . 'assets/css/checkout.css' ) 
-            // version của file CSS: filemtime() = last modified time, không phải “thời gian tạo file”
-        ); // Tham số thứ 5 bỏ trống: nếu CSS dùng cho giao diện web bình thường thì có thể bỏ trống tham số thứ 5 (WordPress sẽ hiểu là "all").
+        function joinex_enqueue_safe_style($handle, $relative_path, $deps = array(), $media = 'all') {
+            $file_path = plugin_dir_path(__FILE__) . $relative_path; // Không dùng tham số cố định, đảm bảo gọi hàm plugin_dir_path độc lập với tham số cố định
+            $file_url  = plugin_dir_url(__FILE__) . $relative_path;
+            if ( file_exists($file_path) ) {
+                wp_enqueue_style(
+                    $handle,
+                    $file_url,
+                    $deps,
+                    filemtime($file_path),
+                    $media
+                );
+            }
+        }
 
-        // CSS cho List product (đảm bảo load sau Elementor)
-        wp_enqueue_style(
-            'joinex-product-list',
-            plugin_dir_url(__FILE__) . 'assets/css/List-product-HomePage.css',
-            array('elementor-frontend', 'joinex-checkout-css'), // load sau Elementor và CSS plugin khác
-            filemtime( plugin_dir_path(__FILE__) . 'assets/css/List-product-HomePage.css' )
-        );
+        function joinex_enqueue_safe_script($handle, $relative_path, $deps = array('jquery'), $in_footer = true) {
+            $file_path = plugin_dir_path(__FILE__) . $relative_path;
+            $file_url  = plugin_dir_url(__FILE__) . $relative_path;
 
-        // CSS cho List product ở trang SẢN PHẨM (đảm bảo load sau Elementor)
-        wp_enqueue_style(
-            'joinex-product-list-ProductPage',
-            plugin_dir_url(__FILE__) . 'assets/css/List-product-ProductPage.css',
-            array('elementor-frontend', 'joinex-checkout-css'), // load sau Elementor và CSS plugin khác
-            filemtime( plugin_dir_path(__FILE__) . 'assets/css/List-product-ProductPage.css' )
-        );
+            if ( file_exists($file_path) ) {
+                wp_enqueue_script(
+                    $handle,
+                    $file_url,
+                    $deps,
+                    filemtime($file_path), // dùng thời gian sửa file làm version để tránh cache
+                    $in_footer
+                );
+            }
+        }
 
-        // CSS cho Bộ lọc sản phẩm
-        wp_enqueue_style(
-            'joinex-product-filter-dropdown',
-            plugin_dir_url(__FILE__) . 'assets/css/product_filter_dropdown.css',
-            array('elementor-frontend', 'joinex-checkout-css'), // load sau Elementor và CSS plugin khác
-            filemtime( plugin_dir_path(__FILE__) . 'assets/css/product_filter_dropdown.css' )
-        );
+      
+    // BẮT ĐẦU SỬ DỤNG HÀM ĐỂ LOAD CSS VÀ JS
 
-        // CSS cho Trang chi tiết sản phẩm
-        wp_enqueue_style(
-            'joinex-product-detail-page',
-            plugin_dir_url(__FILE__) . 'assets/css/product-detail.css',
-            array('elementor-frontend', 'joinex-checkout-css'), // load sau Elementor và CSS plugin khác
-            filemtime( plugin_dir_path(__FILE__) . 'assets/css/product-detail.css' )
-        );
+        function joinex_load_assets() {
 
-        // CSS cho SLIDER SẢN PHẨM
-        wp_enqueue_style(
-            'slider-product-detail',
-            plugin_dir_url(__FILE__) . 'assets/css/slider-product-detail.css',
-            array('elementor-frontend', 'joinex-checkout-css'), // load sau Elementor và CSS plugin khác
-            filemtime( plugin_dir_path(__FILE__) . 'assets/css/slider-product-detail.css' )
-        );
+           
+            // LOAD CSS CHO DANH SÁCH SẢN PHẨM Ở TRANG CHỦ
+            joinex_enqueue_safe_style('joinex-list-product-homepage', 'assets/css/List-product-HomePage.css', array('elementor-frontend')); 
+            // LOAD CSS CHO DANH SÁCH SẢN PHẨM Ở TRANG SẢN PHẨM
+            joinex_enqueue_safe_style('joinex-list-product-productpage', 'assets/css/List-product-ProductPage.css', array('elementor-frontend')); 
+            // LOAD CSS CHO TRANG CHI TIẾT SẢN PHẨM
+            joinex_enqueue_safe_style('joinex-product-detail-page', 'assets/css/product-detail.css', array('elementor-frontend'));
+            // LOAD CSS CHO PHẦN SLIDER SẢN PHẨM
+            joinex_enqueue_safe_style('joinex-product-slider', 'assets/css/slider-product-detail.css', array('elementor-frontend'));
+
+            //LOAD JS
+            joinex_enqueue_safe_script('joinex-slider-js', 'assets/js/slider-product-detail.js', array('jquery'), true);
+
+        }
+
+        //add_action() là một HOOK là “điểm móc” (hook) để lập trình viên chen vào.
+        // add_action('init', 'joinex_commerce_load_shortcodes'); tức là bạn bảo WordPress: “Đến lúc chạy hook init thì gọi hàm này”.
+        add_action('wp_enqueue_scripts', 'joinex_load_assets'); // wp_enqueue_scripts: chạy khi WordPress chuẩn bị in ra HTML, thích hợp để enqueue CSS/JS.
+
+/* #endregin  */  
 
 
+
+//#region PHẦN LOAD CÁC SHORTCODE
+
+    function joinex_require_safe_shortcode($relative_path) {
+        $file_path = plugin_dir_path(__FILE__) . $relative_path;
+        if ( file_exists($file_path) )
+            {
+                require_once $file_path;
+            }
+        else 
+            {
+            // Có thể log hoặc thông báo lỗi nhẹ để dễ debug
+            error_log("Thiếu file shortcode trong thư mục ShortCode: " . $file_path);
+            }    
     }
-    add_action('wp_enqueue_scripts','joinex_load_assets', 20);
+
+    function joinex_commerce_load_shortcodes() {
+        joinex_require_safe_shortcode('shortcodes/List-product-HomePage.php');
+        joinex_require_safe_shortcode('shortcodes/List-product-ProductPage.php');
+        joinex_require_safe_shortcode('shortcodes/product_filter_dropdown.php');
+        joinex_require_safe_shortcode('shortcodes/product-detail.php');
+        joinex_require_safe_shortcode('shortcodes/slider-product-detail.php');
+    }
+    // init: chạy sau khi WordPress đã load xong core, thích hợp để đăng ký shortcode, custom post type.
+    add_action('init', 'joinex_commerce_load_shortcodes');
 
 
-
-/* Load logic -- XỬ LÝ CÁC HÀM. */  
-
-require_once plugin_dir_path(__FILE__) . 'includes/checkout.php';
-
-
-/* Load shortcode - Cái mà WordPress và Elementor Page sử dụng để Show ra trang mà Plugin không cần tạo ra Page */
-
-require_once plugin_dir_path(__FILE__) . 'shortcodes/checkout-shortcode.php';
-
-//KHAI BÁO VỚI PLUGIN là có hàm này và sử dụng hàm này 
-require_once plugin_dir_path(__FILE__) . 'includes/product-utils.php';
-
-
-
-
-// HÀM LOAD SHORTCODE
-function joinex_commerce_load_shortcodes() {
-    include_once plugin_dir_path(__FILE__) . 'shortcodes/List-product-HomePage.php';
-    include_once plugin_dir_path(__FILE__) . 'shortcodes/List-product-ProductPage.php';
-    include_once plugin_dir_path(__FILE__) . 'shortcodes/product_filter_dropdown.php';
-    include_once plugin_dir_path(__FILE__) . 'shortcodes/product-detail.php';
-    include_once plugin_dir_path(__FILE__) . 'shortcodes/slider-product-detail.php';
-}
-
-add_action('init', 'joinex_commerce_load_shortcodes');
-
-/* Load phần Custom trang chỉnh sửa sản phẩm THÊM Ô NHẬP THÔNG SỐ KỸ THUẬT VÀ HƯỚNG DẪN LẮP ĐẶT */
-
-require_once plugin_dir_path(__FILE__) . 'includes/product-custom-fields.php';
-
-
-
+//#endregion
 
 
