@@ -105,7 +105,6 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
 
         function joinex_load_assets() {
 
-           
             // LOAD CSS CHO DANH SÁCH SẢN PHẨM Ở TRANG CHỦ
             joinex_enqueue_safe_style('joinex-list-product-homepage', 'assets/css/List-product-HomePage.css', array('elementor-frontend')); 
             // LOAD CSS CHO DANH SÁCH SẢN PHẨM Ở TRANG SẢN PHẨM
