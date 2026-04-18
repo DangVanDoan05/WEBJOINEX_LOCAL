@@ -69,9 +69,10 @@ Author: M1029_Dang Van Doan
         wp_enqueue_style(
             'joinex-checkout-css', // tên định danh duy nhất cho stylesheet.
             plugin_dir_url(__FILE__) . 'assets/css/checkout.css', // $src: đường dẫn URL đến file CSS.
-            array(),  // $deps: mảng các stylesheet phụ thuộc (nếu có).
-            filemtime( plugin_dir_path(__FILE__) . 'assets/css/checkout.css' )
-        );
+            array(),  // $deps: mảng các stylesheet phụ thuộc (nếu có). ; array() trống = không phụ thuộc, chỉ để giữ đúng cú pháp.
+            filemtime( plugin_dir_path(__FILE__) . 'assets/css/checkout.css' ) 
+            // version của file CSS: filemtime() = last modified time, không phải “thời gian tạo file”
+        ); // Tham số thứ 5 bỏ trống: nếu CSS dùng cho giao diện web bình thường thì có thể bỏ trống tham số thứ 5 (WordPress sẽ hiểu là "all").
 
         // CSS cho List product (đảm bảo load sau Elementor)
         wp_enqueue_style(
