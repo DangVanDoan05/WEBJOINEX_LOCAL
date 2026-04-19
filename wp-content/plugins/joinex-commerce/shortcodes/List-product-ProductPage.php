@@ -132,7 +132,7 @@ function list_product_product_page_shortcode() {
                 $discount_percent = round( ( ( $regular_price - $sale_price ) / $regular_price ) * 100 );
             }
             ?>
-             // 🔥 KHỐI SHOW SẢN PHẨM
+            <!-- 🔥 KHỐI SHOW SẢN PHẨM-->
             <div class="product-item-joinex">
 
                 <a class="product-joinex-img-card-a" <?php echo joinex_get_product_detail_page_attrs( $product->get_id() ); ?>>

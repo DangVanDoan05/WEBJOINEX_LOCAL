@@ -118,7 +118,7 @@ function slider_joinex_product_detail_shortcode() {
                                                         <h3><?php echo esc_html( get_the_title() ); ?></h3>
                                                     </div>  
 
-                                                    <div class="product-joinex-divider"></div>
+                                                    <div class="product-slider-joinex-divider"></div>
 
                                                     <div class="product-price-add-to-cart-slider-joinex">
                             
