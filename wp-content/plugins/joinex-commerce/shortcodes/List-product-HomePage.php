@@ -6,25 +6,25 @@
 function list_product_home_page_shortcode() {
     $cat_id = isset($_GET['product_cat']) ? intval($_GET['product_cat']) : 0;
 
-$args = array(
-    'post_type'      => 'product',
-    'posts_per_page' => 8,
-    'post_status'    => 'publish',
-    'orderby'        => 'ID',
-    'order'          => 'DESC',
-);
-
-if ($cat_id > 0) {
-    $args['tax_query'] = array(
-        array(
-            'taxonomy' => 'product_cat',
-            'field'    => 'term_id',
-            'terms'    => $cat_id,
-        ),
+    $args = array(
+        'post_type'      => 'product',
+        'posts_per_page' => 8,
+        'post_status'    => 'publish',
+        'orderby'        => 'ID',
+        'order'          => 'DESC',
     );
-}
 
-$loop = new WP_Query($args);
+    if ($cat_id > 0) {
+        $args['tax_query'] = array(
+            array(
+                'taxonomy' => 'product_cat',
+                'field'    => 'term_id',
+                'terms'    => $cat_id,
+            ),
+        );
+    }
+
+    $loop = new WP_Query($args);
     // $loop là một WP_Query object chứa:
 
     // methods: have_posts(), the_post(), rewind_posts(), get_posts(), next_post(), in_the_loop().

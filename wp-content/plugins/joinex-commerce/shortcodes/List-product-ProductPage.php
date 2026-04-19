@@ -200,11 +200,11 @@ function list_product_product_page_shortcode() {
             <?php
         }
     echo '</div>';
-} else {
-    echo '<p class="no-products">Không có sản phẩm.</p>';
-} 
-
+    } else {
+        echo '<p class="no-products">Không có sản phẩm.</p>';
+    } 
     wp_reset_postdata();
     return ob_get_clean();
+    
 }
 add_shortcode( 'List_product_Product_page', 'list_product_product_page_shortcode' );

@@ -331,7 +331,7 @@
 
 .cart-btn-joinex,
 .buy-btn-joinex {
-  padding: 6px 12px;
+  padding: 6px 9px;
   border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
@@ -354,6 +354,7 @@
 }
 
 .buy-btn-joinex {
+
   background-color: #ffffff;
   color: #670130;
   border: 2px solid #670130;
