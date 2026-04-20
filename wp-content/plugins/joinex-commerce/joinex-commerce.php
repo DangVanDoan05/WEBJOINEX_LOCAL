@@ -13,8 +13,7 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
 
 //#endregion
 
-
-//#region ĐỊNH NGHĨA CÁC THÔNG SỐ CỐ ĐỊNH SỬ DỤNG: define trong PHP chính là cách để tạo hằng số. 
+//#region ĐỊNH NGHĨA CÁC THÔNG SỐ CỐ ĐỊNH SỬ DỤNG: define trong PHP chính là cách để tạo thông số cố định.
 
     // CÚ PHÁP: define('TEN_HANG_SO', 'gia_tri');
     //  hàm tiện ích (function) do WordPress cung cấp sẵn.
@@ -22,15 +21,12 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
     define('JOINEX_PLUGIN_URL', plugin_dir_url(__FILE__)); //plugin_dir_url(__FILE__): trả về URL tuyệt đối đến thư mục chứa file plugin hiện tại.
     define('JOINEX_PLUGIN_PATH', plugin_dir_path(__FILE__)); // plugin_dir_path(__FILE__): tương tự, nhưng trả về đường dẫn vật lý trên server (filesystem path).
    
-
-
     // chặn truy cập trực tiếp vào file plugin, chỉ cho phép file chạy khi được WordPress load.
     //  Đây là cách bảo vệ plugin khỏi bị khai thác hoặc lộ thông tin.
     if (!defined('ABSPATH')) {
         exit;
     }
 //#endregion
-
 
 //#region LOAD CÁC TIỆN ÍCH (require trực tiếp, không cần hook)
     require_once plugin_dir_path(__FILE__). 'includes/product-utils.php';
@@ -69,53 +65,56 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
 
       // $media: loại media (screen, print…).
       
-     // Hàm “ĐẢM BẢO” để enqueue,tự kiểm tra file trước khi gọi filemtime():
-
-        function joinex_enqueue_safe_style($handle, $relative_path, $deps = array(), $media = 'all') {
-            $file_path = plugin_dir_path(__FILE__) . $relative_path; // Không dùng tham số cố định, đảm bảo gọi hàm plugin_dir_path độc lập với tham số cố định
-            $file_url  = plugin_dir_url(__FILE__) . $relative_path;
-            if ( file_exists($file_path) ) {
-                wp_enqueue_style(
-                    $handle,
-                    $file_url,
-                    $deps,
-                    filemtime($file_path),
-                    $media
-                );
+        // Hàm “ĐẢM BẢO” để enqueue,tự kiểm tra file trước khi gọi filemtime():
+        //#region KHỞI TẠO HÀM ĐỂ LOAD CSS, JS
+            function joinex_enqueue_safe_style($handle, $relative_path, $deps = array(), $media = 'all') {
+                $file_path = plugin_dir_path(__FILE__) . $relative_path; // Không dùng tham số cố định, đảm bảo gọi hàm plugin_dir_path độc lập với tham số cố định
+                $file_url  = plugin_dir_url(__FILE__) . $relative_path;
+                if ( file_exists($file_path) ) {
+                    wp_enqueue_style(
+                        $handle,
+                        $file_url,
+                        $deps,
+                        filemtime($file_path),
+                        $media
+                    );
+                }
             }
-        }
 
-        function joinex_enqueue_safe_script($handle, $relative_path, $deps = array('jquery'), $in_footer = true) {
-            $file_path = plugin_dir_path(__FILE__) . $relative_path;
-            $file_url  = plugin_dir_url(__FILE__) . $relative_path;
+            function joinex_enqueue_safe_script($handle, $relative_path, $deps = array('jquery'), $in_footer = true) {
+                $file_path = plugin_dir_path(__FILE__) . $relative_path;
+                $file_url  = plugin_dir_url(__FILE__) . $relative_path;
 
-            if ( file_exists($file_path) ) {
-                wp_enqueue_script(
-                    $handle,
-                    $file_url,
-                    $deps,
-                    filemtime($file_path), // dùng thời gian sửa file làm version để tránh cache
-                    $in_footer
-                );
+                if ( file_exists($file_path) ) {
+                    wp_enqueue_script(
+                        $handle,
+                        $file_url,
+                        $deps,
+                        filemtime($file_path), // dùng thời gian sửa file làm version để tránh cache
+                        $in_footer
+                    );
+                }
             }
-        }
-
+        //#endregion
       
-    // BẮT ĐẦU SỬ DỤNG HÀM ĐỂ LOAD CSS VÀ JS
+        // BẮT ĐẦU SỬ DỤNG HÀM ĐỂ LOAD CSS VÀ JS
 
         function joinex_load_assets() {
 
-            // LOAD CSS CHO DANH SÁCH SẢN PHẨM Ở TRANG CHỦ
-            joinex_enqueue_safe_style('joinex-list-product-homepage', 'assets/css/List-product-HomePage.css', array('elementor-frontend')); 
-            // LOAD CSS CHO DANH SÁCH SẢN PHẨM Ở TRANG SẢN PHẨM
-            joinex_enqueue_safe_style('joinex-list-product-productpage', 'assets/css/List-product-ProductPage.css', array('elementor-frontend')); 
-            // LOAD CSS CHO TRANG CHI TIẾT SẢN PHẨM
-            joinex_enqueue_safe_style('joinex-product-detail-page', 'assets/css/product-detail.css', array('elementor-frontend'));
-            // LOAD CSS CHO PHẦN SLIDER SẢN PHẨM
-            joinex_enqueue_safe_style('joinex-product-slider', 'assets/css/slider-product-detail.css', array('elementor-frontend'));
+            //#region LOAD CSS CHO CÁC SHORTCODE
+                // LOAD CSS CHO DANH SÁCH SẢN PHẨM Ở TRANG CHỦ
+                joinex_enqueue_safe_style('joinex-list-product-homepage', 'assets/css/List-product-HomePage.css', array('elementor-frontend')); 
+                // LOAD CSS CHO DANH SÁCH SẢN PHẨM Ở TRANG SẢN PHẨM
+                joinex_enqueue_safe_style('joinex-list-product-productpage', 'assets/css/List-product-ProductPage.css', array('elementor-frontend')); 
+                // LOAD CSS CHO TRANG CHI TIẾT SẢN PHẨM
+                joinex_enqueue_safe_style('joinex-product-detail-page', 'assets/css/product-detail.css', array('elementor-frontend'));
+                // LOAD CSS CHO PHẦN SLIDER SẢN PHẨM
+                joinex_enqueue_safe_style('joinex-product-slider', 'assets/css/slider-product-detail.css', array('elementor-frontend'));
+            //#endregion
 
-            //LOAD JS
-            joinex_enqueue_safe_script('joinex-slider-js', 'assets/js/slider-product-detail.js', array('jquery'), true);
+            //#region LOAD JS CHO CÁC SHORTCODE
+                //joinex_enqueue_safe_script('joinex-slider-js', 'assets/js/slider-product-detail.js', array('jquery'), true);
+            //#endregion
 
         }
 
@@ -123,9 +122,7 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
         // add_action('init', 'joinex_commerce_load_shortcodes'); tức là bạn bảo WordPress: “Đến lúc chạy hook init thì gọi hàm này”.
         add_action('wp_enqueue_scripts', 'joinex_load_assets'); // wp_enqueue_scripts: chạy khi WordPress chuẩn bị in ra HTML, thích hợp để enqueue CSS/JS.
 
-/* #endregin  */  
-
-
+/* #endregin */  
 
 //#region PHẦN LOAD CÁC SHORTCODE
 
