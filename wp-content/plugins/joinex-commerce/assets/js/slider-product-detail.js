@@ -3,12 +3,27 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("✅ JS SLIDER ĐÃ ĐƯỢC LOAD");
   const track = document.querySelector(".product-list-slider-joinex-track");
+
   const btnPrev = document.getElementById("prev-joinex-slider");
   const btnNext = document.getElementById("next-joinex-slider");
 
   const itemWidth = 270.75 + 15;
   let scrollAmount = 0;
   let isSliding = false;
+
+    console.log("🔍 track:", track);
+  console.log("🔍 btnPrev:", btnPrev);
+  console.log("🔍 btnNext:", btnNext);
+
+  if (!track) {
+    console.warn("⚠️ Không tìm thấy .product-list-slider-joinex-track");
+  }
+  if (!btnPrev) {
+    console.warn("⚠️ Không tìm thấy #prev-joinex-slider");
+  }
+  if (!btnNext) {
+    console.warn("⚠️ Không tìm thấy #next-joinex-slider");
+  }
 
   function slide() {
     if (isSliding) return;
