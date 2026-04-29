@@ -1,3 +1,5 @@
+.joinex-product-detail-wrap{
+
 .joinex-product-detail {
   max-width: 1140px; /* giới hạn chiều rộng nội dung */
   margin: 0 auto; /* căn giữa theo chiều ngang */
@@ -5,14 +7,165 @@
   font-family: "BeVietnam Pro", sans-serif;
 }
 
-.images-short-description-product {
-  display: flex;
-  gap: 30px;
-}
+/*#region HÌNH ẢNH SẢN PHẨM MÔ TẢ NGẮN*/
 
-.title-short-description-product {
-  width: 508px;
-}
+
+  /*#region HÌNH ẢNH SẢN PHẨM*/
+    .images-short-description-product {
+      display: flex;
+      gap: 30px;
+    }
+
+    .title-short-description-product {
+      width: 508px;
+    }
+
+
+    .images-product-container {
+      width: 600px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .main-image-container {
+      display: flex;
+      background-color: #dbdbdb;
+      width: 600px;
+      height: 600px;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      justify-content: center; /* căn ngang */
+      align-items: center; /* căn dọc */
+    }
+
+    .main-image-container img {
+      width: 550px;
+      border-radius: 5px;
+    }
+
+    .images-gallery-product {
+      display: flex;
+      gap: 10px;
+    }
+
+    .main-image {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .main-image img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .gallery-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .product-gallery.slider {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      width: 100%;
+    }
+    .images-gallery-product.slider {
+      display: flex; /* xếp ảnh ngang */
+      gap: 10px; /* khoảng cách giữa ảnh */
+      width: 100%;
+    }
+    .gallery-thumb {
+      flex: 0 0 auto;
+      width: 23.6%; /* tối đa 4 thumbnail hiển thị cùng lúc */
+    }
+
+    .gallery-thumb img {
+      width: 100%;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .gallery-thumb img {
+      background-color: #dbdbdb;
+      border-radius: 5px;
+    }
+    .gallery-thumb img.active {
+      border-color: #3a3939;
+      border-radius: 5px;
+    }
+
+    .product-gallery.slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .btn-prev,
+    .btn-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .btn-prev {
+      left: 10px;
+    }
+    .btn-next {
+      right: 10px;
+    }
+    /* Ẩn scrollbar trên Chrome, Safari */
+    .product-gallery.slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Ẩn scrollbar trên Firefox */
+    .product-gallery.slider {
+      scrollbar-width: none;
+    }
+
+    /* Ẩn scrollbar trên IE/Edge cũ */
+    .product-gallery.slider {
+      -ms-overflow-style: none;
+    }
+    .gallery-container {
+      position: relative;
+      width: 100%;
+    }
+    .btn-prev,
+    .btn-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .btn-prev {
+      left: 0;
+    }
+    .btn-next {
+      right: 0;
+    }
+    .images-gallery-product.slider {
+      display: flex;
+      overflow: hidden; /* ẩn phần dư */
+      width: 100%;
+    }
+
+    .gallery-thumb {
+      flex: 0 0 23.7%; /* mỗi ảnh chiếm 1/4 khung */
+    }
+  /* #endregion */
+
+  /*#region GIÁ VÀ MÔ TẢ NGẮN SẢN PHẨM*/
 
 .product-detail-page-title-joinex h1 {
   font-family: "Be Vietnam Pro", sans-serif;
@@ -25,156 +178,44 @@
   display: flex;
   justify-content: left;
 }
-.images-product-container {
-  width: 600px;
-  display: grid;
-  gap: 20px;
-}
-
-.main-image-container {
+/* #region GÍA SẢN PHẨM, MÔ TẢ NGẮN */
+.product-price-wrap{
   display: flex;
-  background-color: #dbdbdb;
-  width: 600px;
-  height: 600px;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  justify-content: center; /* căn ngang */
-  align-items: center; /* căn dọc */
+  justify-content: left;
 }
-
-.main-image-container img {
-  width: 550px;
-  border-radius: 5px;
-}
-
-.images-gallery-product {
-  display: flex;
-  gap: 10px;
-}
-
-.main-image {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.main-image img {
-  max-width: 100%;
-  height: auto;
-}
-
-.gallery-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
-.product-gallery.slider {
-  display: flex;
-  gap: 7px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  width: 100%;
-}
-.images-gallery-product.slider {
-  display: flex; /* xếp ảnh ngang */
-  gap: 10px; /* khoảng cách giữa ảnh */
-  width: 100%;
-}
-.gallery-thumb {
-  flex: 0 0 auto;
-  width: 23.6%; /* tối đa 4 thumbnail hiển thị cùng lúc */
-}
-
-.gallery-thumb img {
-  width: 100%;
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-.gallery-thumb img {
-  background-color: #dbdbdb;
-  border-radius: 5px;
-}
-.gallery-thumb img.active {
-  border-color: #3a3939;
-  border-radius: 5px;
-}
-
-.product-gallery.slider::-webkit-scrollbar {
-  display: none;
-}
-
-.btn-prev,
-.btn-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  z-index: 10;
-}
-
-.btn-prev {
-  left: 10px;
-}
-.btn-next {
-  right: 10px;
-}
-/* Ẩn scrollbar trên Chrome, Safari */
-.product-gallery.slider::-webkit-scrollbar {
-  display: none;
-}
-
-/* Ẩn scrollbar trên Firefox */
-.product-gallery.slider {
-  scrollbar-width: none;
-}
-
-/* Ẩn scrollbar trên IE/Edge cũ */
-.product-gallery.slider {
-  -ms-overflow-style: none;
-}
-.gallery-container {
-  position: relative;
-  width: 100%;
-}
-.btn-prev,
-.btn-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  z-index: 10;
-}
-.btn-prev {
-  left: 0;
-}
-.btn-next {
-  right: 0;
-}
-.images-gallery-product.slider {
-  display: flex;
-  overflow: hidden; /* ẩn phần dư */
-  width: 100%;
-}
-
-.gallery-thumb {
-  flex: 0 0 23.7%; /* mỗi ảnh chiếm 1/4 khung */
-}
-
 .product-price {
-  text-align: left;
+  display: inline-flex;   /* giữ inline-flex */
+  width: auto;            /* tự co theo nội dung */
+  height: 50px;
+  align-items: center;
+  gap: 30px;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 0 10px;
+  border: 2px solid #ccc;
+}
+
+
+.sale-price,.regular-price-no-sale {
+  font-family: "Be Vietnam", 'Times New Roman', Times, serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #670130;
+  display: flex;
+  justify-content: left;
+  align-items: center; /* căn giữa theo chiều dọc */
+  
+}
+
+.regular-price {
   font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 22px;
-  font-weight: 400;
-  margin-bottom: 20px;
-  color: #000000;
+  font-size: 16px;
+  font-weight: 500;
+  color: #777777;
+  display: flex;
+  justify-content: left;
+  align-items: center; /* căn giữa theo chiều dọc */
+  text-decoration: line-through; /* gạch ngang chữ */
 }
 
 .product-short-description {
@@ -185,13 +226,14 @@
   font-weight: 400;
   margin-bottom: 20px;
   color: #000000;
-  margin-bottom: 0;
+  margin-top: 20px;
 }
 
 .divider {
   border-top: 2px solid #bfbfbf; /* đường kẻ mảnh màu xám */
   margin: 0 0; /* khoảng cách trên dưới */
 }
+/* #endregion */
 
 /* BẮT ĐẦU CSS KHỐI THUỘC TÍNH SẢN PHẨM */
 .cc-variation-container {
@@ -380,6 +422,8 @@
   display: inline-block; /* đảm bảo hiển thị */
 }
 
+
+
 /* #region KHỐI CHI TIẾT DỊCH VỤ */
 
 .service-info-joinex {
@@ -471,6 +515,10 @@
   background-color: #bfbfbf; /* màu đường kẻ */
   margin: 0px 0; /* khoảng cách trên dưới */
 }
+  /* #endregion */
+
+  /* #endregion */
+
 /* #endregion */
 
 /* #region   KHỐI MÔ TẢ DÀI SẢN PHẨM */
@@ -536,3 +584,4 @@
   align-items: left; /* căn dọc */
 }
 /*#endregion*/
+}

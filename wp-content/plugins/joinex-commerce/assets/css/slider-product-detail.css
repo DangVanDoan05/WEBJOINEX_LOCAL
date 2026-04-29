@@ -2,8 +2,8 @@
 
 /* KHỐI SLIDER BAO NGOÀI CÙNG */
 
+/* CÁCH VIẾT ĐỂ CHO CSS CHỈ ÁP DỤNG TRONG KHỐI .product-list-slider-joinex-container-wrap*/
 .product-list-slider-joinex-container-wrap {
-
 
     .product-list-slider-container {
       display: flex;
@@ -107,6 +107,7 @@
 
     .product-slider-joinex-item-title {
       height: 65px;
+      width: 246.75px;
     }
 
     .product-price-add-to-cart-slider-joinex {
@@ -126,7 +127,7 @@
     .product-slider-joinex-divider {
       height: 1px;
       background-color: #cbcbcb;
-      width: 100%; /* tràn hết khung cha */
+       width: 246.75px;
     }
 
     .add-to-cart-joinex {
