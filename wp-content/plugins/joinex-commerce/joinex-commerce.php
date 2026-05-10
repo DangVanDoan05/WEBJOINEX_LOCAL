@@ -152,4 +152,23 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
 
 //#endregion
 
+// =============================
+// 🔥 Rewrite rule cho trang chi tiết sản phẩm custom
+// =============================
+function joinex_add_rewrite_rules() {
+    add_rewrite_rule(
+        '^chi-tiet-san-pham/([^/]+)/?',
+        'index.php?pagename=chi-tiet-san-pham&product_slug=$matches[1]',
+        'top'
+    );
+}
+add_action('init', 'joinex_add_rewrite_rules');
+
+function joinex_add_query_vars( $vars ) {
+    $vars[] = 'product_slug';
+    return $vars;
+}
+add_filter('query_vars', 'joinex_add_query_vars');
+
+
 

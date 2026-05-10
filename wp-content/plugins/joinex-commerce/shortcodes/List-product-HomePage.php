@@ -102,7 +102,7 @@ function list_product_home_page_shortcode() {
                 ?>
                 <!-- KHỐI SHOW SẢN PHẨM -->
                 <div class="product-item-joinex">                  
-                    <a class="product-joinex-img-card-a" <?php echo joinex_get_product_detail_page_attrs($product->get_id()); ?>>
+                    <a class="product-joinex-img-card-a" <?php echo joinex_get_product_detail_page_attrs( $product->get_id() ); ?>>
                         <!--$product ở đây là một đối tượng kiểu WC_Product (được tạo ra khi bạn gọi wc_get_product( get_the_ID() )) -->
                         <!-- KHỐI HÌNH ẢNH -->
                         <div class="product-item-joinex-image">
@@ -116,7 +116,7 @@ function list_product_home_page_shortcode() {
                         </div>
                     </a>
                      <!-- THẺ A SỬ DỤNG KHỐI <?php echo joinex_get_product_detail_page_attrs( $product->get_id() ); ?> ĐỂ THAY PHẦN HREF --> 
-                    <a class="product-joinex-title-card-a" <?php echo joinex_get_product_detail_page_attrs( $product->get_id() ); ?>>
+                    <a class="product-joinex-title-card-a" <?php echo joinex_get_product_detail_page_attrs(  $product->get_id() ); ?>>
                         <!-- KHỐI TIÊU ĐỀ  -->
                         <div class="product-item-joinex-title">
 

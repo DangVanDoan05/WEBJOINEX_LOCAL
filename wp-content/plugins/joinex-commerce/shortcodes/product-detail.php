@@ -1,14 +1,32 @@
 <?php
 // Shortcode: [joinex_product_detail]
 function joinex_product_detail_shortcode() {
-    // Lấy ID sản phẩm từ query string (?product_id=123)
-    $product_id = isset($_GET['product_id']) ? intval($_GET['product_id']) : 0;
-    if (!$product_id) return '<p>Không tìm thấy sản phẩm.</p>';
+    // Lấy slug sản phẩm từ query string (?product_slug=xxx)
+    $product_slug = get_query_var('product_slug');
 
-    $product = wc_get_product($product_id);
-    if (!$product) return '<p>Không tìm thấy sản phẩm.</p>';
+    if ( ! $product_slug ) {
+        return '<p>Không tìm thấy sản phẩm.</p>';
+    }
 
-    ob_start(); ?>
+    // Tìm ID sản phẩm theo slug
+    global $wpdb;
+    $product_id = $wpdb->get_var( $wpdb->prepare(
+        "SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type = 'product'",
+        $product_slug
+    ));
+
+    if ( ! $product_id ) {
+        return '<p>Không tìm thấy sản phẩm.</p>';
+    }
+
+    $product = wc_get_product( $product_id );
+    if ( ! $product ) {
+        return '<p>Không tìm thấy sản phẩm.</p>';
+    }
+
+    ob_start();
+    // ... phần HTML giữ nguyên như bạn đã viết ...
+ ?>
 
     <!-- KHỐI HTML BẮT ĐẦU -->
     <div class="joinex-product-detail-wrap">
