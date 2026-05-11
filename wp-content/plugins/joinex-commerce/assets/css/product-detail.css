@@ -195,17 +195,17 @@
 
   /*#region GIÁ VÀ MÔ TẢ NGẮN SẢN PHẨM*/
 
-.product-detail-page-title-joinex h1 {
-  font-family:  'Be Vietnam', sans-serif;
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #000000;
-}
-.product-detail-page-title-joinex {
-  display: flex;
-  justify-content: left;
-}
+  .product-detail-page-title-joinex h1 {
+    font-family:  'Be Vietnam', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #000000;
+  }
+  .product-detail-page-title-joinex {
+    display: flex;
+    justify-content: left;
+  }
 /* #region GÍA SẢN PHẨM, MÔ TẢ NGẮN */
 .product-price-wrap{
   display: flex;
@@ -265,7 +265,9 @@
 
 /*#region BẮT ĐẦU CSS KHỐI THUỘC TÍNH SẢN PHẨM */
   .cc-variation-container {
+    padding: 10px;
     margin-top: 15px;
+    background-color: #cab9b9;
   }
 
   .variation-group {
@@ -274,6 +276,8 @@
     height: 40px;
     margin-top: 5px;
     margin-bottom: 5px;
+    background-color: #670130;
+    padding: 5px;
   }
 
   .label-variation {
@@ -290,7 +294,11 @@
   }
 
   .button-variation-container {
-    height: 35px;
+    display: flex;
+    height: 50px;
+    padding: 5px;
+    background-color: #000000;
+    gap: 10px;
   }
 
   .attribute-group {
@@ -303,20 +311,21 @@
     font-weight: 600;
   }
 
-  .attr-btn {
+  .attr-btn{
     display: flexbox; /* bật flexbox */
     align-items: center; /* căn giữa theo chiều dọc */
     justify-content: center; /* căn giữa theo chiều ngang */
-    width: 40px; /* chiều rộng tối thiểu */
-    height: 40px; /* chiều cao nút */
+    width: 35px; /* chiều rộng tối thiểu */
+    height: 35px; /* chiều cao nút */
     margin: 0;
     border: 1px solid #ccc;
     border-radius: 4px;
-    background-color:red;
+    background-color:rgb(172, 221, 201);
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 14px;
     color: #333;
+    padding: 0px;
   }
 
   .attr-btn:hover {

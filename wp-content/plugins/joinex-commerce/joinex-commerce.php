@@ -152,23 +152,38 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
 
 //#endregion
 
-// =============================
-// 🔥 Rewrite rule cho trang chi tiết sản phẩm custom
-// =============================
-function joinex_add_rewrite_rules() {
-    add_rewrite_rule(
-        '^chi-tiet-san-pham/([^/]+)/?',
-        'index.php?pagename=chi-tiet-san-pham&product_slug=$matches[1]',
-        'top'
-    );
-}
-add_action('init', 'joinex_add_rewrite_rules');
+// #region TẠO THÊM ĐƯỜNG DẪN MỚI, DÙNG SLUG ĐỂ DẪN ĐẾN TRANG CHI TIẾT SẢN PHẨM TỰ TẠO
 
-function joinex_add_query_vars( $vars ) {
-    $vars[] = 'product_slug';
-    return $vars;
-}
-add_filter('query_vars', 'joinex_add_query_vars');
+    // =============================
+    // 🔥 Rewrite rule cho trang chi tiết sản phẩm custom
+    // =============================
+    //  Khi người dùng truy cập URL này, WordPress sẽ hiểu:
+    // → Nạp trang có slug chi-tiet-san-pham (trang bạn tạo riêng).
+    // → Gắn thêm biến product_slug để bạn lấy ra sản phẩm tương ứng. 
+    // Từ slug này, bạn query database để tìm ra ID sản phẩm tương ứng.
 
+    // Sau đó dùng wc_get_product($product_id) để lấy object sản phẩm.
+    // Hai đoạn code đó thực chất là hai phần bổ sung cho nhau
+    
+    function joinex_add_rewrite_rules() //add_rewrite_rule(...) → đây là phần khai báo đường dẫn, nói với WordPress:
+      //“Nếu URL có dạng /chi-tiet-san-pham/{slug}, thì hãy nạp trang chi-tiet-san-pham và đồng thời gắn thêm biến product_slug bằng giá trị {slug}.”
+     { 
+        add_rewrite_rule(
+            '^chi-tiet-san-pham/([^/]+)/?',
+            'index.php?pagename=chi-tiet-san-pham&product_slug=$matches[1]',
+            'top'
+        );
+    }
+    add_action('init', 'joinex_add_rewrite_rules');  
 
+    function joinex_add_query_vars( $vars ) 
+    // add_query_vars(...) → đây là phần khai báo biến. 
+    // cho WordPress biết rằng product_slug là một biến hợp lệ trong hệ thống query vars, để sau đó bạn có thể gọi get_query_var('product_slug') trong shortcode hoặc template.
+     {
+        $vars[] = 'product_slug';
+        return $vars;
+     }
+    add_filter('query_vars', 'joinex_add_query_vars');
+
+//#endregion
 

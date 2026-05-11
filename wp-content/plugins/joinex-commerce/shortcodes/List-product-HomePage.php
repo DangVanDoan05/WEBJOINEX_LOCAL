@@ -173,4 +173,5 @@ function list_product_home_page_shortcode() {
     wp_reset_postdata();
     return ob_get_clean();
 }
+
 add_shortcode( 'List_product_Home_page', 'list_product_home_page_shortcode' );
