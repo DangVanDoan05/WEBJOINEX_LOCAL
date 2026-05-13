@@ -108,24 +108,78 @@ function joinex_product_detail_shortcode() {
                         <!--#endregion -->
                         <!--#region KHỐI TIÊU ĐỀ VÀ MÔ TẢ NGẮN  --> 
                             <div class="title-short-description-product">  
-                                <!--#region  TIÊU ĐỀ SẢN PHẨM VÀ MÔ TẢ NGẮN  --> 
+                                <!--#region  TIÊU ĐỀ SẢN PHẨM, GÍA SẢN PHẨM VÀ MÔ TẢ NGẮN  -->
                                     <div class="product-detail-page-title-joinex">
                                         <h1 id="product-detail-page-title-joinex"><?php echo esc_html($product->get_name()); ?></h1>
                                         <?php echo wc_get_rating_html($product->get_average_rating()); ?>
                                     </div> 
-                                    <div class="product-price-wrap">            
-                                        <div class="product-price">  
-                                            <?php // à lại phải ốp khối vào đây
-                                                if ( $product->is_on_sale() ) {
-                                                    echo '<span class="sale-price">' . wc_price( $product->get_sale_price() ) . '</span>';
-                                                    echo '<span class="regular-price">' . wc_price( $product->get_regular_price() ) . '</span>';
-                                                }
-                                                else {
-                                                    echo '<span class="regular-price-no-sale">' . wc_price( $product->get_regular_price() ) . '</span>';
-                                                }
-                                            ?>
-                                        </div>
-                                    </div>
+                                    <div class="product-price-wrap"> 
+                                         <!--#region Truyền giá trị động bằng JS khi load phần thuộc tính sản phẩm. -->                                      
+                                        <div id="block-price" class="product-price">
+    <?php 
+    // Hàm chuẩn hóa giá trị thuộc tính
+    function normalize_attr($value) {
+        return strtolower(preg_replace('/\D/', '', $value)); // chỉ giữ số, chuyển về lowercase
+    }
+
+    if ( $product->is_type('simple') ) {
+        if ( $product->is_on_sale() ) {
+            echo '<span class="sale-price">' . wc_price( $product->get_sale_price() ) . '</span>';
+            echo '<span class="regular-price">' . wc_price( $product->get_regular_price() ) . '</span>';
+        } else {
+            echo '<span class="regular-price-no-sale">' . wc_price( $product->get_regular_price() ) . '</span>';
+        }
+    } elseif ( $product->is_type('variable') ) {
+        $attributes = $product->get_attributes();
+        $selected = [];
+
+        foreach ($attributes as $attr_name => $attr_obj) {
+            $options = $attr_obj->get_options();
+            sort($options);
+            if (!empty($options)) {
+                $selected[$attr_name] = $options[0];
+            }
+        }
+
+        $variations = $product->get_children();
+        $lowest_variation = null;
+
+        foreach ($variations as $variation_id) {
+            $variation = wc_get_product($variation_id);
+            if (!$variation) continue;
+
+            $attrs = $variation->get_attributes();
+            $match = true;
+            foreach ($selected as $attr_name => $attr_value) {
+                $val1 = normalize_attr($attr_value);
+                $val2 = isset($attrs[$attr_name]) ? normalize_attr($attrs[$attr_name]) : '';
+                if ($val1 !== $val2) {
+                    $match = false;
+                    break;
+                }
+            }
+
+            if ($match) {
+                $lowest_variation = $variation;
+                break;
+            }
+        }
+
+        if ($lowest_variation) {
+            if ($lowest_variation->is_on_sale()) {
+                echo '<span class="sale-price">' . wc_price($lowest_variation->get_sale_price()) . '</span>';
+                echo '<span class="regular-price">' . wc_price($lowest_variation->get_regular_price()) . '</span>';
+            } else {
+                echo '<span class="regular-price-no-sale">' . wc_price($lowest_variation->get_regular_price()) . '</span>';
+            }
+        } else {
+            echo '<span class="regular-price-no-sale">Không tìm thấy biến thể phù hợp</span>';
+        }
+    }
+    ?>
+</div>
+
+                                    </div> 
                                     <div class="product-short-description">                 
                                         <?php echo apply_filters( 'woocommerce_short_description', $product->get_short_description() );?>
                                     </div>
@@ -135,88 +189,113 @@ function joinex_product_detail_shortcode() {
                                 <!-- endregion-->                                                           
                                 <!--#region KHỐI THUỘC TÍNH SẢN PHẨM -->                         
                                    <div class="product-variation"> 
-    <?php
-    if ( $product ) {
-        if ( $product->is_type('simple') ) {
-            echo '<p>Sản phẩm này là sản phẩm đơn giản.</p>';
-            echo '<div id="variation-price">' . $product->get_price_html() . '</div>';
-        } elseif ( $product->is_type('variable') ) {
-            echo '<p>Sản phẩm này là sản phẩm biến thể (có nhiều lựa chọn thuộc tính).</p>';                                                  
+                                        <?php
+                                        // KIỂM TRA SẢN PHẨM LẤY RA XEM THUỘC LOẠI NÀO
+                                        if ( $product )
+                                        {
+                                            if ( $product->is_type('simple') )  // NẾU LÀ SẢN PHẨM ĐƠN GIẢN.
+                                            {
+                                               // echo '<p>Sản phẩm này là sản phẩm đơn giản.</p>';
+                                              //  echo '<div id="block-price" class="product-price">' . $product->get_price_html() . '</div>';
+                                            }
+                                            else
+                                            {   
+                                                if ( $product->is_type('variable') ) //SẢN PHẨM BIẾN THỂ, CÓ NHIỀU THUỘC TÍNH ĐỂ LỰA CHỌN
+                                                {
+                                                    // echo '<p>Sản phẩm này là sản phẩm biến thể (có nhiều lựa chọn thuộc tính).</p>';                                                  
+                                                    // echo '<p>Sản phẩm này là sản phẩm biến thể (có nhiều lựa chọn thuộc tính).</p>';  
+                                                    if ( $product->is_type('variation') ) // NẾU LÀ BIẾN THỂ THÌ TÌM SẢN PHẨM CHA
+                                                    {
+                                                        $parent_id      = $product->get_parent_id();
+                                                        $parent_product = wc_get_product($parent_id);
+                                                    } 
+                                                    else // KHÔNG PHẢI BIẾN THỂ THÌ SẢN PHẨM CHÍNH LÀ SẢN PHẨM CHA
+                                                    {
+                                                        $parent_product = $product;
+                                                    }
+                                                    
+                                                    if ( $parent_product ) // BẮT ĐẦU LẤY DỮ LIỆU ĐỂ LOAD BIẾN THỂ
+                                                    {
+                                                        // Lấy dữ liệu biến thể để JS dùng
+                                                        $variations = $parent_product->get_children();
+                                                        $variation_data = [];
+                                                        foreach ( $variations as $variation_id ) {
+                                                            $variation = wc_get_product($variation_id);
+                                                            if ( ! $variation ) continue;
+                                                            $variation_data[$variation_id] = [
+                                                                'attributes'     => $variation->get_attributes(),
+                                                                'regular_price'  => $variation->get_regular_price(),
+                                                                'sale_price'     => $variation->get_sale_price(),
+                                                            ];
+                                                        }
+                                                        echo '<script>var variationData = ' . wp_json_encode($variation_data) . ';</script>';
 
-            // Nếu là biến thể thì tìm sản phẩm mẹ
-            if ( $product->is_type('variation') ) {
-                $parent_id      = $product->get_parent_id();
-                $parent_product = wc_get_product($parent_id);
-            } else {
-                $parent_product = $product;
-            }
+                                                        // RENDER THUỘC TÍNH
+                                                        $attributes = $parent_product->get_attributes();                            
+                                                        echo '<div class="cc-variation-container">';
+                                                            foreach ( $attributes as $attribute ) {
+                                                                $name = wc_attribute_label($attribute->get_name());
+                                                                echo '<div class="variation-group">';
+                                                                    echo '<div class="label-variation">' . esc_html($name) . ':</div>';              
 
-            if ( $parent_product ) {
-                // Lấy dữ liệu biến thể để JS dùng
-                $variations = $parent_product->get_children();
-                $variation_data = [];
-                foreach ( $variations as $variation_id ) {
-                    $variation = wc_get_product($variation_id);
-                    if ( ! $variation ) continue;
-                    $variation_data[$variation_id] = [
-                        'attributes' => $variation->get_attributes(),
-                        'price_html' => $variation->get_price_html(),
-                    ];
-                }
-                echo '<script>var variationData = ' . wp_json_encode($variation_data) . ';</script>';
+                                                                    if ( $attribute->is_taxonomy() ) {
+                                                                        $terms = get_terms( [
+                                                                            'taxonomy'   => $attribute->get_name(),
+                                                                            'object_ids' => $parent_product->get_id(),
+                                                                        ] );
+                                                                        sort($terms);
 
-                // Render thuộc tính
-                $attributes = $parent_product->get_attributes();                            
-                echo '<div class="cc-variation-container">';
-                foreach ( $attributes as $attribute ) {
-                    $name = wc_attribute_label($attribute->get_name());
-                    echo '<div class="variation-group">';
-                        echo '<div class="label-variation">' . esc_html($name) . ':</div>';              
+                                                                        echo '<div class="button-variation-container">';
+                                                                        foreach ($terms as $index => $term) {
+                                                                            $active_class = ($index === 0) ? ' active' : '';
+                                                                            // slug để so khớp DB, name để hiển thị
+                                                                            echo '<button class="attr-btn' . $active_class . '" 
+                                                                                    data-attr="' . esc_attr($term->slug) . '" 
+                                                                                    data-attr-name="' . esc_attr($attribute->get_name()) . '">' 
+                                                                                    . esc_html($term->name) . '</button>';
+                                                                        }
+                                                                        echo '</div>';
+                                                                    } else {
+                                                                        $options = $attribute->get_options();
+                                                                        sort($options, SORT_NATURAL | SORT_FLAG_CASE);
 
-                        if ( $attribute->is_taxonomy() ) {
-                            $terms = wc_get_product_terms(
-                                $parent_product->get_id(),
-                                $attribute->get_name(),
-                                array('fields' => 'names')
-                            );
-                            sort($terms, SORT_NATURAL | SORT_FLAG_CASE);
+                                                                        echo '<div class="button-variation-container">';
+                                                                        foreach ($options as $index => $option) {
+                                                                            $active_class = ($index === 0) ? ' active' : '';
+                                                                            echo '<button class="attr-btn' . $active_class . '" 
+                                                                                    data-attr="' . esc_attr($option) . '" 
+                                                                                    data-attr-name="' . esc_attr($attribute->get_name()) . '">' 
+                                                                                    . esc_html($option) . '</button>';
+                                                                        }
+                                                                        echo '</div>';
+                                                                    }           
+                                                                echo '</div>';
+                                                            }
+                                                        echo '</div>';
 
-                            echo '<div class="button-variation-container">';
-                            foreach ($terms as $index => $term) {
-                                $active_class = ($index === 0) ? ' active' : '';
-                                echo '<button class="attr-btn' . $active_class . '" data-attr="' . esc_attr($term) . '" data-attr-name="' . esc_attr($attribute->get_name()) . '">' . esc_html($term) . '</button>';
-                            }
-                            echo '</div>';
-                        } else {
-                            $options = $attribute->get_options();
-                            sort($options, SORT_NATURAL | SORT_FLAG_CASE);
+                                                    
+                                                    } else {
+                                                        echo '<p>Không tìm thấy sản phẩm mẹ.</p>';
+                                                    }
 
-                            echo '<div class="button-variation-container">';
-                            foreach ($options as $index => $option) {
-                                $active_class = ($index === 0) ? ' active' : '';
-                                echo '<button class="attr-btn' . $active_class . '" data-attr="' . esc_attr($option) . '" data-attr-name="' . esc_attr($attribute->get_name()) . '">' . esc_html($option) . '</button>';
-                            }
-                            echo '</div>';
-                        }           
-                    echo '</div>';
-                }
-                echo '</div>';
+                                                }
+                                                else
+                                                {
+                                                    if ( $product->is_type('variation') ) // Sản phẩm này là một biến thể con của sản phẩm mẹ.
+                                                    {
+                                                        //echo '<p>Sản phẩm này là một biến thể con của sản phẩm mẹ.</p>';
+                                                        //echo '<div id="block-price" class="product-price">' . $product->get_price_html() . '</div>';
+                                                    }
+                                                    else 
+                                                    {
+                                                       // echo '<p>Loại sản phẩm khác: ' . esc_html( $product->get_type() ) . '</p>';
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </div>
 
-                // Vùng hiển thị giá
-                echo '<div id="variation-price"></div>';
-            } else {
-                echo '<p>Không tìm thấy sản phẩm mẹ.</p>';
-            }
-
-        } elseif ( $product->is_type('variation') ) {
-            echo '<p>Sản phẩm này là một biến thể con của sản phẩm mẹ.</p>';
-            echo '<div id="variation-price">' . $product->get_price_html() . '</div>';
-        } else {
-            echo '<p>Loại sản phẩm khác: ' . esc_html( $product->get_type() ) . '</p>';
-        }
-    }
-    ?>
-</div>
                                 <!-- endregion--> 
                                 <!--#region CÁC HÀNH ĐỘNG SẢN PHẨM THÊM VÀO GIỎ HÀNG, MUA NGAY --> 
                                     <div class="product-actions">  

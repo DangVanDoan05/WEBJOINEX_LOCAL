@@ -1,3 +1,4 @@
+//#region thuộc tính phần thư viện hình ảnh sản phẩm
 document.addEventListener("DOMContentLoaded", function () {
   const mainImage = document.getElementById("current-main-image");
   const thumbs = document.querySelectorAll(".thumb-image");
@@ -60,52 +61,64 @@ document.addEventListener("DOMContentLoaded", function () {
   showImage(currentIndex);
   updateSlider();
 });
+//#endregion
 
 // #region JS CHO PHẦN TÙY CHỌN THUỘC TÍNH
 
-document.addEventListener("DOMContentLoaded", function () {
-  const priceBox = document.getElementById("variation-price");
+document.addEventListener('DOMContentLoaded', function() {
+    const priceBox = document.getElementById('block-price');
 
-  // Khi click nút thuộc tính
-  document.querySelectorAll(".button-variation-container").forEach((group) => {
-    const buttons = group.querySelectorAll(".attr-btn");
-    buttons.forEach((btn) => {
-      btn.addEventListener("click", function () {
-        // Xóa active trong nhóm
-        buttons.forEach((b) => b.classList.remove("active"));
-        this.classList.add("active");
+    if (typeof variationData !== 'undefined') {
+        function updatePrice() {
+            const selectedAttrs = {};
+            document.querySelectorAll('.attr-btn.active').forEach(activeBtn => {
+                selectedAttrs[activeBtn.dataset.attrName] = activeBtn.dataset.attr;
+            });
 
-        // Lấy tất cả giá trị đang chọn
-        const selectedAttrs = {};
-        document.querySelectorAll(".attr-btn.active").forEach((activeBtn) => {
-          selectedAttrs[activeBtn.dataset.attrName] = activeBtn.dataset.attr;
-        });
+            for (const id in variationData)
+               {
+                const attrs = variationData[id].attributes;
+                let match = true;
+                for (const key in selectedAttrs) {
+                    if (attrs[key] != selectedAttrs[key]) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) {
+                    const salePrice = variationData[id].sale_price;
+                    const regularPrice = variationData[id].regular_price;
 
-        // Tìm biến thể khớp trong variationData
-        for (const id in variationData) {
-          const attrs = variationData[id].attributes;
-          let match = true;
-          for (const key in attrs) {
-            if (selectedAttrs[key] !== attrs[key]) {
-              match = false;
-              break;
+                    if (salePrice && salePrice !== "") {
+                        priceBox.innerHTML = `
+                            <span class="sale-price">${new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND'}).format(salePrice)}</span>
+                            <span class="regular-price">${new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND'}).format(regularPrice)}</span>
+                        `;
+                    } else {
+                        priceBox.innerHTML = `
+                            <span class="regular-price-no-sale">${new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND'}).format(regularPrice)}</span>
+                        `;
+                    }
+                    return;
+                }
             }
-          }
-          if (match) {
-            priceBox.innerHTML = variationData[id].price_html;
-            break;
-          }
         }
-      });
-    });
-  });
 
-  // Hiển thị giá mặc định cho tổ hợp nhỏ nhất
-  const firstActive = document.querySelector(".attr-btn.active");
-  if (firstActive) {
-    firstActive.click();
-  }
+        document.querySelectorAll('.button-variation-container').forEach(group => {
+            const buttons = group.querySelectorAll('.attr-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    updatePrice();
+                });
+            });
+        });
+    }
 });
+
+
+
 
 //#endregion
 
