@@ -1,4 +1,4 @@
-//#region   PHẦN SLIDER SẢN PHẨM LIÊN QUAN PHẢI HỌC THÔI CHỨ KHÔNG LÀ KHÔNG LÀM CHỦ ĐƯỢC ĐÂU
+//#region   PHẦN SLIDER SẢN PHẨM LIÊN QUAN 
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("✅ JS SLIDER ĐÃ ĐƯỢC LOAD");

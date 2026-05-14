@@ -110,11 +110,13 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
                 joinex_enqueue_safe_style('joinex-product-detail-page', 'assets/css/product-detail.css', array('elementor-frontend'));
                 // LOAD CSS CHO PHẦN SLIDER SẢN PHẨM
                 joinex_enqueue_safe_style('joinex-product-slider', 'assets/css/slider-product-detail.css', array('elementor-frontend'));
+                // LOAD CSS CHO TRANG GIỎ HÀNG
+                joinex_enqueue_safe_style('joinex-product-cart', 'assets/css/product-cart.css', array('elementor-frontend'));
             //#endregion
 
             //#region LOAD JS CHO CÁC SHORTCODE
                joinex_enqueue_safe_script('joinex-slider-js', 'assets/js/slider-product-detail.js', array('jquery'), true);
-              joinex_enqueue_safe_script('joinex-product-detail-js', 'assets/js/product-detail.js', array('jquery'), true);
+               joinex_enqueue_safe_script('joinex-product-detail-js', 'assets/js/product-detail.js', array('jquery'), true);
             //#endregion
 
         }
@@ -146,12 +148,15 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
         joinex_require_safe_shortcode('shortcodes/product_filter_dropdown.php');
         joinex_require_safe_shortcode('shortcodes/product-detail.php');
         joinex_require_safe_shortcode('shortcodes/slider-product-detail.php');
+        joinex_require_safe_shortcode('shortcodes/product_cart.php');
+        joinex_require_safe_shortcode('shortcodes/joinex_test_cart.php');
     }
     // init: chạy sau khi WordPress đã load xong core, thích hợp để đăng ký shortcode, custom post type.
     add_action('init', 'joinex_commerce_load_shortcodes');
 
 
 //#endregion
+
 
 // #region TẠO THÊM ĐƯỜNG DẪN MỚI, DÙNG SLUG ĐỂ DẪN ĐẾN TRANG CHI TIẾT SẢN PHẨM TỰ TẠO
 

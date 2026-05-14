@@ -3,20 +3,15 @@
 function joinex_product_detail_shortcode() { 
 
     // #region PHẦN LOGIC ĐỂ LẤY ĐƯỢC SẢN PHẨM TỪ URL
-
         // lấy ra giá trị slug(Đường dẫn) sản phẩm từ URL
-
         $product_slug = get_query_var('product_slug');
-
         if ( ! $product_slug ) {
             return '<p>Không tìm thấy sản phẩm theo như đường dẫn Slug.</p>';
         }
-
         // Tìm ID sản phẩm theo slug
         global $wpdb;
         // Đây này câu lệnh để lấy ID sản phẩm đây này.
         $product_id = $wpdb->get_var( $wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type = 'product'",$product_slug));
-
         if ( ! $product_id ) {
             return '<p>Không tìm thấy sản phẩm theo ID sản phẩm.</p>';
         }
@@ -24,12 +19,59 @@ function joinex_product_detail_shortcode() {
         $product = wc_get_product( $product_id );
         if ( ! $product ) {
             return '<p>Không tìm thấy sản phẩm theo ID sản phẩm.</p>';
-        }
-
+        }         
     // #endregion
 
+    //#region HÀM TÌM BIẾN THỂ CÓ GIÁ TRỊ CỦA THUỘC TÍNH NHỎ NHẤT, CÓ GIÁ NHỎ NHẤT
+            function get_lowest_variation_dynamic( $product )
+                {
+                    if ( ! $product->is_type('variable') ) return null;
+                    $lowest_variation = null;
+                    $lowest_value = PHP_INT_MAX;
+                    $attribute_slug = null;
+                    foreach ( $product->get_children() as $variation_id )
+                    {
+                        $variation = wc_get_product( $variation_id );
+                        if ( ! $variation ) continue;
+
+                        $attrs = $variation->get_attributes();
+
+                        // Duyệt tất cả thuộc tính của biến thể
+                        foreach ( $attrs as $attr_name => $attr_value ) {
+                            // Lấy số từ chuỗi (ví dụ "5m" -> 5, "Ø9" -> 9)
+                            $value = (int) filter_var($attr_value, FILTER_SANITIZE_NUMBER_INT);
+
+                            // Nếu lấy được số hợp lệ thì so sánh
+                            if ( $value > 0 && $value < $lowest_value ) {
+                                $lowest_value = $value;
+                                $lowest_variation = $variation;
+                                $attribute_slug = $attr_name;
+                            }
+                        }
+                    }
+                    // Trả về biến thể nhỏ nhất + thuộc tính nào đã dùng để so sánh
+                    return [
+                        'variation' => $lowest_variation, //  mà trả về biến thể có giá trị thuộc tính nhỏ nhất theo kiểu số
+                        'attribute' => $attribute_slug,
+                        'value'     => $lowest_value
+                    ];
+                }
+    // #endregion
+
+    // Xử lý thêm vào giỏ hàng
+// Đặt trong shortcode hoặc template của bạn
+if ( isset($_POST['add_to_cart_195']) ) {
+    WC()->cart->add_to_cart(195, 1);
+}
+echo '<h1>sản phẩm trong giỏ</h1>';
+echo '<pre>';
+
+print_r( WC()->cart->get_cart() );
+echo '</pre>';
+
+
+
     ob_start();
-    // ... phần HTML giữ nguyên như bạn đã viết ...
    ?>
 
     <!-- #region KHỐI HTML SHOW SẢN PHẨM -->
@@ -111,75 +153,51 @@ function joinex_product_detail_shortcode() {
                                 <!--#region  TIÊU ĐỀ SẢN PHẨM, GÍA SẢN PHẨM VÀ MÔ TẢ NGẮN  -->
                                     <div class="product-detail-page-title-joinex">
                                         <h1 id="product-detail-page-title-joinex"><?php echo esc_html($product->get_name()); ?></h1>
-                                        <?php echo wc_get_rating_html($product->get_average_rating()); ?>
+                                        <?php echo wc_get_rating_html($product->get_average_rating()); ?>                                        
                                     </div> 
                                     <div class="product-price-wrap"> 
                                          <!--#region Truyền giá trị động bằng JS khi load phần thuộc tính sản phẩm. -->                                      
                                         <div id="block-price" class="product-price">
-    <?php 
-    // Hàm chuẩn hóa giá trị thuộc tính
-    function normalize_attr($value) {
-        return strtolower(preg_replace('/\D/', '', $value)); // chỉ giữ số, chuyển về lowercase
-    }
+                                            <?php 
+                                            // Hàm chuẩn hóa giá trị thuộc tính
+                                            function normalize_attr($value) {
+                                                return strtolower(preg_replace('/\D/', '', $value)); // chỉ giữ số, chuyển về lowercase
+                                            }
 
-    if ( $product->is_type('simple') ) {
-        if ( $product->is_on_sale() ) {
-            echo '<span class="sale-price">' . wc_price( $product->get_sale_price() ) . '</span>';
-            echo '<span class="regular-price">' . wc_price( $product->get_regular_price() ) . '</span>';
-        } else {
-            echo '<span class="regular-price-no-sale">' . wc_price( $product->get_regular_price() ) . '</span>';
-        }
-    } elseif ( $product->is_type('variable') ) {
-        $attributes = $product->get_attributes();
-        $selected = [];
-
-        foreach ($attributes as $attr_name => $attr_obj) {
-            $options = $attr_obj->get_options();
-            sort($options);
-            if (!empty($options)) {
-                $selected[$attr_name] = $options[0];
-            }
-        }
-
-        $variations = $product->get_children();
-        $lowest_variation = null;
-
-        foreach ($variations as $variation_id) {
-            $variation = wc_get_product($variation_id);
-            if (!$variation) continue;
-
-            $attrs = $variation->get_attributes();
-            $match = true;
-            foreach ($selected as $attr_name => $attr_value) {
-                $val1 = normalize_attr($attr_value);
-                $val2 = isset($attrs[$attr_name]) ? normalize_attr($attrs[$attr_name]) : '';
-                if ($val1 !== $val2) {
-                    $match = false;
-                    break;
-                }
-            }
-
-            if ($match) {
-                $lowest_variation = $variation;
-                break;
-            }
-        }
-
-        if ($lowest_variation) {
-            if ($lowest_variation->is_on_sale()) {
-                echo '<span class="sale-price">' . wc_price($lowest_variation->get_sale_price()) . '</span>';
-                echo '<span class="regular-price">' . wc_price($lowest_variation->get_regular_price()) . '</span>';
-            } else {
-                echo '<span class="regular-price-no-sale">' . wc_price($lowest_variation->get_regular_price()) . '</span>';
-            }
-        } else {
-            echo '<span class="regular-price-no-sale">Không tìm thấy biến thể phù hợp</span>';
-        }
-    }
-    ?>
-</div>
-
-                                    </div> 
+                                            if ( $product->is_type('simple') ) // Nếu là sản phẩm đơn giản.
+                                            {
+                                                if ( $product->is_on_sale() ) {
+                                                    echo '<span class="sale-price">' . wc_price( $product->get_sale_price() ) . '</span>';
+                                                    echo '<span class="regular-price">' . wc_price( $product->get_regular_price() ) . '</span>';
+                                                } else {
+                                                    echo '<span class="regular-price-no-sale">' . wc_price( $product->get_regular_price() ) . '</span>';
+                                                }
+                                            }
+                                            else // Nếu là sản phẩm biến thể
+                                            {
+                                                $result = get_lowest_variation_dynamic( $product ); // mà trả về biến thể có giá trị thuộc tính nhỏ nhất theo kiểu số
+                                                    if ( $result['variation'] ) 
+                                                    {
+                                                       // echo "Biến thể nhỏ nhất theo thuộc tính {$result['attribute']} = {$result['value']} <br>";
+                                                       // echo "Giá: " . wc_price($result['variation']->get_price());
+                                                        if ( $result['variation']->is_on_sale() )
+                                                        {
+                                                            echo '<span class="sale-price">' . wc_price( $result['variation']->get_sale_price() ) . '</span>';
+                                                            echo '<span class="regular-price">' . wc_price( $result['variation']->get_regular_price() ) . '</span>';
+                                                        }
+                                                        else
+                                                        {
+                                                            echo '<span class="regular-price-no-sale">' . wc_price( $result['variation']->get_regular_price() ) . '</span>';
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        echo "Không tìm thấy biến thể phù hợp.";
+                                                    }
+                                            }
+                                            ?>
+                                        </div>    
+                                    </div>                                   
                                     <div class="product-short-description">                 
                                         <?php echo apply_filters( 'woocommerce_short_description', $product->get_short_description() );?>
                                     </div>
@@ -305,15 +323,24 @@ function joinex_product_detail_shortcode() {
                                             <button class="qty-btn-joinex plus-joinex">+</button>
                                         </div>
                                         <div class="action-buttons-joinex">
-                                            <button class="cart-btn-joinex">                          
-                                                <img class="cart-icon-joinex"  src="<?php echo JOINEX_PLUGIN_URL . 'assets/img/ProductDetailPageIMG/CartIMG.png'; ?>" alt="Cart">                          
-                                            <!-- <img src="/assets/img/ProductDetailPageIMG/CartIMG.png" alt="" class="cart-icon-joinex"> -->
-                                                Thêm vào giỏ hàng
-                                            </button>
+                                            <a class="product-joinex-title-card-a" <?php echo joinex_get_product_cart(); ?>>
+                                                <button class="cart-btn-joinex">                          
+                                                    <img class="cart-icon-joinex"  src="<?php echo JOINEX_PLUGIN_URL . 'assets/img/ProductDetailPageIMG/CartIMG.png'; ?>" alt="Cart">                          
+                                                    <!-- <img src="/assets/img/ProductDetailPageIMG/CartIMG.png" alt="" class="cart-icon-joinex"> -->
+                                                    Thêm vào giỏ hàng
+                                                </button>
+                                            </a>
                                             <button class="buy-btn-joinex">
                                             <img class="buy-icon-joinex"  src="<?php echo JOINEX_PLUGIN_URL . 'assets/img/ProductDetailPageIMG/BuyNowIMG.png'; ?>" alt="Cart"> 
                                                 Mua ngay</button>
-                                        </div>                                         
+                                        </div> 
+                                         <div class="action-buttons-joinex">
+                                         <form method="post">
+    <button type="submit" name="add_to_cart_195">Thêm sản phẩm 195</button>
+</form>
+
+
+                                        </div> 
                                     </div>
                                 <!-- endregion--> 
                                 <!-- #region KHỐI THÔNG TIN DỊCH VỤ --> 

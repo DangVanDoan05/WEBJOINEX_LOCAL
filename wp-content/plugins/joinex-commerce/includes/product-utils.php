@@ -10,6 +10,13 @@ function joinex_get_product_detail_page_id() {
     return null; // nếu chưa tạo trang
 }
 
+function joinex_get_product_cart_page_id() {
+    $page = get_page_by_path('gio-hang'); // slug của trang giỏ hàng
+    if ($page) {
+        return $page->ID;
+    }
+    return null; // nếu chưa tạo trang
+}
 
 // Hàm lấy link hoặc báo lỗi
 function joinex_get_product_detail_page_attrs( $product_id ) {
@@ -34,6 +41,27 @@ function joinex_get_product_detail_page_attrs( $product_id ) {
         $url = trailingslashit( $page_link ) . $slug;
 
         return 'href="' . esc_url( $url ) . '"';
+    }
+}
+
+function joinex_get_product_cart() {
+    $page_id = joinex_get_product_cart_page_id();
+
+    if ( !$page_id || get_post_status($page_id) !== 'publish' ) {
+        $msg = "Trang giỏ hàng chưa được tạo hoặc chưa publish! Hãy tạo trang với slug 'gio-hang'";
+        return 'href="javascript:void(0)" 
+                onclick="alert(\'' . esc_js($msg) . '\'); return false;" 
+                oncontextmenu="alert(\'' . esc_js($msg) . '\'); return false;"';
+    }
+    else // LINK ĐẾN TRANG GIỎ HÀNG
+    {
+       
+
+        // Build URL custom theo slug
+        $page_link = get_permalink( $page_id );
+        
+
+        return 'href="' . esc_url( $page_link ) . '"';
     }
 }
 

@@ -64,10 +64,9 @@ document.addEventListener("DOMContentLoaded", function () {
 //#endregion
 
 // #region JS CHO PHẦN TÙY CHỌN THUỘC TÍNH
-
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("✅ JS JOINEX PHẦN THUỘC TÍNH ĐANG CHẠY");
     const priceBox = document.getElementById('block-price');
-
     if (typeof variationData !== 'undefined') {
         function updatePrice() {
             const selectedAttrs = {};
@@ -116,10 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-
-
-
 //#endregion
 
 //#region JS CHO PHẦN NÚT BẤM.
