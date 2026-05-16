@@ -123,6 +123,7 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
 
         //add_action() là một HOOK là “điểm móc” (hook) để lập trình viên chen vào.
         // add_action('init', 'joinex_commerce_load_shortcodes'); tức là bạn bảo WordPress: “Đến lúc chạy hook init thì gọi hàm này”.
+        // tức là bạn bảo WordPress: Đến lúc này thì hãy thực hiện công việc này cho tôi để tôi lấy được kết quả làm cái này đã 
         add_action('wp_enqueue_scripts', 'joinex_load_assets'); // wp_enqueue_scripts: chạy khi WordPress chuẩn bị in ra HTML, thích hợp để enqueue CSS/JS.
 
 /* #endregin */  
@@ -157,6 +158,32 @@ Author: M1029_Dang Van Doan DONG DUONG Plastic & Mold
 
 //#endregion
 
+// #region Hook THÊM SẢN PHẨM VÀO GIỎ HÀNG
+// Hook init được đăng ký → WooCommerce khởi tạo session.
+
+add_action('init', function() {
+    if ( isset($_POST['add_to_cart']) ) {
+        $slug     = sanitize_text_field($_POST['product_slug']);
+        $quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
+
+        if ( $slug ) {
+            global $wpdb;
+            $product_id = $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type = 'product'",
+                    $slug
+                )
+            );
+
+            if ( $product_id ) {
+                WC()->cart->add_to_cart($product_id, $quantity);
+            }
+        }
+    }
+});
+
+
+//#endregion
 
 // #region TẠO THÊM ĐƯỜNG DẪN MỚI, DÙNG SLUG ĐỂ DẪN ĐẾN TRANG CHI TIẾT SẢN PHẨM TỰ TẠO
 

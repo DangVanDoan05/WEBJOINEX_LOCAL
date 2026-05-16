@@ -57,20 +57,6 @@ function joinex_product_detail_shortcode() {
                     ];
                 }
     // #endregion
-
-    // Xử lý thêm vào giỏ hàng
-// Đặt trong shortcode hoặc template của bạn
-if ( isset($_POST['add_to_cart_195']) ) {
-    WC()->cart->add_to_cart(195, 1);
-}
-echo '<h1>sản phẩm trong giỏ</h1>';
-echo '<pre>';
-
-print_r( WC()->cart->get_cart() );
-echo '</pre>';
-
-
-
     ob_start();
    ?>
 
@@ -316,32 +302,20 @@ echo '</pre>';
 
                                 <!-- endregion--> 
                                 <!--#region CÁC HÀNH ĐỘNG SẢN PHẨM THÊM VÀO GIỎ HÀNG, MUA NGAY --> 
-                                    <div class="product-actions">  
-                                        <div class="quantity-joinex">
-                                            <button class="qty-btn-joinex minus-joinex">-</button>
-                                            <input type="number" class="qty-input-joinex" value="1" min="1">
-                                            <button class="qty-btn-joinex plus-joinex">+</button>
-                                        </div>
-                                        <div class="action-buttons-joinex">
-                                            <a class="product-joinex-title-card-a" <?php echo joinex_get_product_cart(); ?>>
-                                                <button class="cart-btn-joinex">                          
-                                                    <img class="cart-icon-joinex"  src="<?php echo JOINEX_PLUGIN_URL . 'assets/img/ProductDetailPageIMG/CartIMG.png'; ?>" alt="Cart">                          
-                                                    <!-- <img src="/assets/img/ProductDetailPageIMG/CartIMG.png" alt="" class="cart-icon-joinex"> -->
-                                                    Thêm vào giỏ hàng
-                                                </button>
-                                            </a>
-                                            <button class="buy-btn-joinex">
-                                            <img class="buy-icon-joinex"  src="<?php echo JOINEX_PLUGIN_URL . 'assets/img/ProductDetailPageIMG/BuyNowIMG.png'; ?>" alt="Cart"> 
-                                                Mua ngay</button>
-                                        </div> 
-                                         <div class="action-buttons-joinex">
-                                         <form method="post">
-    <button type="submit" name="add_to_cart_195">Thêm sản phẩm 195</button>
-</form>
+                                   <form method="post" class="action-buttons-joinex">
+                                        <!-- ID sản phẩm -->
+                                        <input type="text" name="product_slug" value="<?php echo $product_slug; ?>">
+                                        
+                                        <!-- Số lượng -->
+                                        <input type="number" name="quantity" value="1" min="1" class="qty-input-joinex">
+                                        
+                                        <!-- Nút thêm vào giỏ -->
+                                        <button type="submit" name="add_to_cart" class="cart-btn-joinex">
+                                            Thêm vào giỏ hàng
+                                        </button>
+                                    </form>
 
 
-                                        </div> 
-                                    </div>
                                 <!-- endregion--> 
                                 <!-- #region KHỐI THÔNG TIN DỊCH VỤ --> 
                                     <div class="service-info-joinex"> 

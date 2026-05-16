@@ -1,10 +1,7 @@
 <?php
 function joinex_test_cart_shortcode() {
     // Xử lý thêm sản phẩm
-    if ( isset($_POST['add_to_cart_195']) ) {
-        WC()->cart->add_to_cart(200, 1);
-    }
-
+ 
     ob_start();
     ?>
     <form method="post">
